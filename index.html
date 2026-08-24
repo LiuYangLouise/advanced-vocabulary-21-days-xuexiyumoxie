@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Reborn新生留学 · 词汇学习</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 样式完全继承原版，未做任何改动 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', 'Noto Sans SC', sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.light-mode {
+            background-color: #f0f7ea;
+            color: #1A1A1A;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            min-height: 600px;
+            background-color: #1A1A1A;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 30px 30px;
+            border-radius: 12px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .container {
+            background-color: #FFFFFF;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        /* --- 主题切换滑块 --- */
+        .theme-slider-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .theme-slider {
+            width: 60px;
+            height: 30px;
+            background-color: #262626;
+            border-radius: 15px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-mode .theme-slider {
+            background-color: #dce8d0;
+        }
+
+        .slider-dot {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: #FFFFFF;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .slider-dot {
+            background-color: #1A1A1A;
+            left: 33px;
+        }
+
+        /* --- Logo区域 --- */
+        .logo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            gap: 12px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .hexagon-icon {
+            position: relative;
+            width: 60px;
+            height: 70px;
+            flex-shrink: 0;
+        }
+
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background-color: transparent;
+            border: 2px solid #FFFFFF;
+            border-radius: 2px;
+            transition: border-color 0.3s ease;
+            animation: hexagonGroupAppear 3.5s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        body.light-mode .hexagon {
+            border-color: #1A1A1A;
+        }
+
+        .hexagon:nth-child(1) { top: 0; left: 0; animation-delay: 0s; }
+        .hexagon:nth-child(2) { top: 10px; left: 35px; transform: scale(0.85); opacity: 0.8; animation-delay: 0s; }
+        .hexagon:nth-child(3) { top: 10px; left: -35px; transform: scale(0.85); opacity: 0.8; animation-delay: 0s; }
+        .hexagon:nth-child(4) { top: 40px; left: 18px; transform: scale(0.7); opacity: 0.6; animation-delay: 0s; }
+        .hexagon:nth-child(5) { top: 40px; left: -18px; transform: scale(0.7); opacity: 0.6; animation-delay: 0s; }
+
+        @keyframes hexagonGroupAppear {
+            0% { opacity: 0; transform: scale(0.8) rotate(10deg); }
+            20% { opacity: 1; transform: scale(1) rotate(0); }
+            80% { opacity: 1; transform: scale(1) rotate(0); }
+            100% { opacity: 0; transform: scale(0.8) rotate(-10deg); }
+        }
+
+        .logo-text-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+        }
+
+        .logo-text-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .logo-text-sub {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        body.light-mode .logo-text-brand,
+        body.light-mode .logo-text-sub {
+            color: #1A1A1A;
+        }
+
+        @media (max-width: 600px) {
+            .logo-text-brand { font-size: 1.4rem; }
+            .logo-text-sub { font-size: 1.4rem; }
+            .hexagon-icon { transform: scale(0.9); }
+        }
+        @media (max-width: 480px) {
+            .logo-text-brand { font-size: 1.2rem; }
+            .logo-text-sub { font-size: 1.2rem; }
+            .hexagon-icon { transform: scale(0.8); }
+            .logo-container { gap: 8px; }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #CCCCCC;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            transition: color 0.3s ease;
+        }
+        body.light-mode .subtitle { color: #666666; }
+
+        /* --- 信息与日期区块 --- */
+        .info-block {
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-top: 8px;
+        }
+
+        .copyright {
+            font-weight: 300;
+            font-size: 1.1rem;
+            color: #CCCCCC;
+            transition: color 0.3s ease;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        body.light-mode .copyright { color: #666666; }
+
+        .date-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .date-container {
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .date-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+
+        .date-value {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #FFFFFF;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+        body.light-mode .date-value { color: #1A1A1A; }
+
+        .date-label {
+            font-size: 0.8rem;
+            color: #999999;
+            transition: color 0.3s ease;
+            margin-top: 4px;
+        }
+        body.light-mode .date-label { color: #666666; }
+
+        .weekday {
+            font-size: 1rem;
+            color: #CCCCCC;
+            font-weight: 400;
+            margin-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+        body.light-mode .weekday { color: #666666; }
+
+        .for-every-reborner {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #CCCCCC;
+            transition: color 0.3s ease;
+            margin-top: 2px;
+        }
+        body.light-mode .for-every-reborner { color: #666666; }
+
+        /* --- 按钮区域：仅保留两个按钮，样式完全复用 --- */
+        .button-section {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px; /* 间距稍微调大一点，更清晰 */
+            margin-bottom: 30px;
+        }
+
+        .button-category {
+            width: 100%;
+            background-color: #262626;
+            border: none;
+            border-radius: 8px;
+            padding: 18px 20px; /* 内边距稍微增加，视觉更稳重 */
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            letter-spacing: 1px;
+            text-decoration: none;
+            outline: none;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.light-mode .button-category {
+            background-color: #F0F5EC;
+            color: #1A1A1A;
+            border: 1px solid #dce8d0;
+        }
+
+        .button-category:hover {
+            background-color: #2E2E2E;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+        }
+
+        body.light-mode .button-category:hover {
+            background-color: #E4EDDB;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .button-category:active { transform: translateY(0); }
+        .button-category .arrow {
+            font-size: 1.6rem;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .button-category:hover .arrow { opacity: 1; }
+        .button-category .icon-tag {
+            display: inline-block;
+            margin-right: 14px;
+            font-size: 1.4rem;
+        }
+
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* --- 页脚 --- */
+        .footer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #262626;
+            font-size: 0.7rem;
+            color: #666666;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-top: 8px;
+        }
+        body.light-mode .footer { border-top-color: #E0E0E0; }
+        .footer .tiny-credit {
+            font-weight: 300;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+
+        /* --- 响应式微调 --- */
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; min-height: 500px; }
+            .button-section { max-width: 100%; }
+            .date-value { font-size: 1.6rem; }
+            .theme-slider-container { top: 15px; right: 15px; }
+        }
+        @media (max-width: 480px) {
+            .logo-container { gap: 6px; }
+            .hexagon-icon { transform: scale(0.8); }
+            .button-category { padding: 14px 16px; font-size: 1rem; }
+            .date-value { font-size: 1.4rem; }
+            .theme-slider-container { top: 10px; right: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 主题切换滑块 -->
+        <div class="theme-slider-container">
+            <div class="theme-slider" id="themeSlider">
+                <div class="slider-dot"></div>
+            </div>
+        </div>
+
+        <!-- Logo 区域：保留完整品牌标识 -->
+        <div class="logo-section">
+            <div class="logo-container">
+                <div class="hexagon-icon">
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                    <div class="hexagon"></div>
+                </div>
+                <div class="logo-text-group">
+                    <span class="logo-text-brand">Reborn新生留学</span>
+                    <span class="logo-text-sub">词汇精进 · 听力突破</span> <!-- 副标题微调，更贴合内容 -->
+                </div>
+            </div>
+            <div class="subtitle">Veni · Vidi · Vici</div>
+        </div>
+
+        <!-- 日期信息 -->
+        <div class="info-block">
+            <div class="copyright" id="copyright">天天进步，每日新生</div>
+            <div class="date-section">
+                <div class="date-container">
+                    <div class="date-item"><div class="date-value" id="year">2026</div><div class="date-label">年</div></div>
+                    <div class="date-item"><div class="date-value" id="month">08</div><div class="date-label">月</div></div>
+                    <div class="date-item"><div class="date-value" id="day">24</div><div class="date-label">日</div></div>
+                </div>
+                <div class="weekday" id="weekday">星期一</div>
+                <div class="for-every-reborner">FOR EVERY REBORNER</div>
+            </div>
+        </div>
+
+        <!-- 两个核心功能按钮 -->
+        <div class="button-section" id="buttonSection">
+            <button class="button-category" data-url="https://liuyanglouise.github.io/vocabulary-advanced-21-days/index.html?login=ok">
+                <span><span class="icon-tag">📚</span>高阶词汇学习</span>
+                <span class="arrow">→</span>
+            </button>
+            <button class="button-category" data-url="https://liuyanglouise.github.io/advanced-vocabulary-moxie-and-hanyi/login.html">
+                <span><span class="icon-tag">🎧</span>听辨与含义检查</span>
+                <span class="arrow">→</span>
+            </button>
+        </div>
+
+        <div class="footer">
+            <div class="tiny-credit">⏤ 精进 · 新生 · 不凡 ⏤</div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 登录校验保留，与原来逻辑一致
+            const urlParams = new URLSearchParams(window.location.search);
+            const loginParam = urlParams.get('login');
+
+            if (loginParam === 'ok') {
+                sessionStorage.setItem('loginOk', 'yes');
+            }
+
+            if (!sessionStorage.getItem('loginOk')) {
+                const pwd = prompt('请输入访问密码：');
+                if (pwd === 'reborn2026') {
+                    sessionStorage.setItem('loginOk', 'yes');
+                } else {
+                    alert('密码错误，请重新输入。');
+                    window.location.replace(window.location.pathname);
+                }
+            }
+        })();
+
+        // 日期更新函数
+        function getCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const weekday = weekdays[now.getDay()];
+            return { year, month, day, weekday };
+        }
+
+        function updateDateDisplay() {
+            const date = getCurrentDate();
+            document.getElementById('year').textContent = date.year;
+            document.getElementById('month').textContent = date.month;
+            document.getElementById('day').textContent = date.day;
+            document.getElementById('weekday').textContent = date.weekday;
+        }
+
+        // 主题切换
+        function setupThemeToggle() {
+            const themeSlider = document.getElementById('themeSlider');
+            const body = document.body;
+            themeSlider.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+                localStorage.setItem('theme', body.classList.contains('light-mode') ? 'light' : 'dark');
+            });
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') body.classList.add('light-mode');
+        }
+
+        // 按钮点击：导航 + 涟漪动效
+        function setupCategoryButtons() {
+            const buttons = document.querySelectorAll('.button-category');
+            buttons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // 涟漪效果
+                    const rect = this.getBoundingClientRect();
+                    const ripple = document.createElement('div');
+                    const size = Math.max(rect.width, rect.height);
+                    ripple.style.cssText = `
+                        position:absolute;
+                        border-radius:50%;
+                        transform:scale(0);
+                        animation:ripple 0.6s linear;
+                        pointer-events:none;
+                        width:${size}px;
+                        height:${size}px;
+                        left:${e.clientX - rect.left - size/2}px;
+                        top:${e.clientY - rect.top - size/2}px;
+                        background:${document.body.classList.contains('light-mode') ? 'rgba(26,26,26,0.15)' : 'rgba(255,255,255,0.25)'};
+                    `;
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    setTimeout(() => ripple.remove(), 600);
+
+                    const url = this.dataset.url;
+                    if (url) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDateDisplay();
+            setupThemeToggle();
+            setupCategoryButtons();
+            setInterval(updateDateDisplay, 86400000); // 每日更新日期
+        });
+    </script>
+</body>
+</html>
